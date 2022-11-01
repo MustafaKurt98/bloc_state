@@ -1,4 +1,5 @@
 import 'package:bloc_state/bloc/cats_cubit.dart';
+import 'package:bloc_state/bloc/cats_repoitory.dart';
 import 'package:bloc_state/bloc/cats_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +15,7 @@ class _BlocCatsViewState extends State<BlocCatsView> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CatsCubit(),
+      create: (context) => CatsCubit(SampleCatsRepository()),
       child: buildScaffold(context),
     );
   }
@@ -25,28 +26,13 @@ class _BlocCatsViewState extends State<BlocCatsView> {
         ),
         body: BlocConsumer<CatsCubit, CatsState>(builder: (context, state) {
           if (state is CatsInitial) {
-            return Center(
-              child: Column(
-                children: [
-                  const Text('Press the button to load cats'),
-                  FloatingActionButton(
-                    onPressed: () =>
-                        BlocProvider.of<CatsCubit>(context).loadCats( ),
-                    child: const Icon(Icons.refresh),
-                  ),
-                ],
-              ),
-            );
+            return buildInitialChild(context);
           } else if (state is CatsLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return buildProgressIndicator();
           } else if (state is CatsCompleted) {
-            return buildGridView(state.response);
+            return buildGridView(state);
           } else if (state is CatsError) {
-            return Center(
-              child: Text(state.message),
-            );
+            return buildErrorChild(state);
           } else {
             return const Center(
               child: Text('Unknown state'),
@@ -63,15 +49,38 @@ class _BlocCatsViewState extends State<BlocCatsView> {
         }),
       );
 
-  buildGridView(List<String> response) {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-      ),
-      itemCount: response.length,
-      itemBuilder: (context, index) {
-        return Image.network(response[index]);
-      },
+  Center buildErrorChild(CatsError state) {
+    return Center(
+      child: Text(state.message),
     );
+  }
+
+  Center buildProgressIndicator() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Center buildInitialChild(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          const Text('Press the button to load cats'),
+          FloatingActionButton(
+            onPressed: () => BlocProvider.of<CatsCubit>(context).loadCats(),
+            child: const Icon(Icons.refresh),
+          ),
+        ],
+      ),
+    );
+  }
+
+  buildGridView(CatsCompleted response) {
+    return ListView.builder(itemBuilder: (context, index) {
+      return ListTile(
+        title: Image.network(response.response[index].imageUrl!),
+        subtitle: Text(response.response[index].description!),
+      );
+    });
   }
 }

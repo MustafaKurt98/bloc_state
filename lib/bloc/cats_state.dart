@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:bloc_state/bloc/cats_model.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class CatsState{
@@ -14,7 +14,7 @@ abstract class CatsState{
   }
 
 class CatsCompleted extends CatsState {
-    final List<String> response;
+    final List<CatsModel> response;
     const CatsCompleted(this.response);
     
   @override
