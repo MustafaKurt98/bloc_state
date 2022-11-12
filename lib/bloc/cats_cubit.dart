@@ -18,4 +18,4 @@ class CatsCubit extends Cubit<CatsState> {
   }
 
   List<String> catsPhotoUrl = [];
-}
+}    
