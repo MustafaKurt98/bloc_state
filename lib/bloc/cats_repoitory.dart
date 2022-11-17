@@ -15,16 +15,15 @@ class SampleCatsRepository implements CatsRepository {
     final response = await http.get(Uri.parse(baseUrl));
     switch (response.statusCode) {
       case HttpStatus.ok:
-          final jsonBody= jsonDecode(response.body);
-          return jsonBody.map<CatsModel>((e) => CatsModel.fromJson(e)).toList();
+        final jsonBody = jsonDecode(response.body);
+        return jsonBody.map<CatsModel>((e) => CatsModel.fromJson(e)).toList();
       default:
-        throw NetWorkError(response.statusCode.toString(),response.body);
+        throw NetWorkError(response.statusCode.toString(), response.body);
     }
   }
 }
 
-
-class NetWorkError implements Exception{
+class NetWorkError implements Exception {
   final String statusCode;
   final String message;
   NetWorkError(this.statusCode, this.message);

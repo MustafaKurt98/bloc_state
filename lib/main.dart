@@ -1,5 +1,5 @@
 import 'package:bloc_state/bloc/bloc_cats_view.dart';
-import 'package:bloc_state/provider/view/home_screen.dart';
+import 'package:bloc_state/global_management/global_manage_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: GlobalManageView(),
     );
   }
 }
